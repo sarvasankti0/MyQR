@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQR · upload & share</title>
+    <!-- font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <!-- font awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            background: #0b1421;
+            color: #eef4ff;
+        }
+
+        /* animated background (cosmic) */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(145deg, #0a1929, #132337, #0f1e30);
+            background-size: 400% 400%;
+            animation: gradientShift 18s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animated-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(80, 140, 220, 0.2) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 70%, rgba(150, 100, 230, 0.15) 0%, transparent 45%);
+            animation: pulseGlow 14s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* main glass card */
+        .myqr-card {
+            background: rgba(16, 30, 48, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 3.5rem;
+            width: 100%;
+            max-width: 950px;
+            padding: 2.8rem 2.5rem;
+            box-shadow: 0 50px 80px -20px #030613, inset 0 0 0 1px rgba(255,255,255,0.04);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .brand-icon {
+            background: #ffffff12;
+            border: 1px solid #ffffff30;
+            color: white;
+            width: 3.8rem;
+            height: 3.8rem;
+            border-radius: 1.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 18px -8px #01060e;
+        }
+
+        .brand h1 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #c7ddff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .brand span {
+            font-size: 0.9rem;
+            color: #aac2ee;
+            display: block;
+            font-weight: 300;
+        }
+
+        .pill-note {
+            background: #1b314f80;
+            border: 1px solid #3a5d8c;
+            padding: 0.6rem 1.5rem;
+            border-radius: 3rem;
+            font-size: 0.9rem;
+            color: #d6e8ff;
+        }
+
+        /* 4 type tiles */
+        .type-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.3rem;
+            justify-content: center;
+            margin: 2.8rem 0 2.2rem;
+        }
+
+        .type-tile {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 2.8rem;
+            padding: 1.5rem 1.8rem;
+            min-width: 160px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 0.7rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 15px 25px -15px #030813;
+        }
+
+        .type-tile:hover {
+            transform: translateY(-5px);
+            background: #1d3455cc;
+            border-color: #7196d0;
+        }
+
+        .type-tile i {
+            font-size: 2.5rem;
+            color: #cde0ff;
+            background: #0e2545b0;
+            padding: 1rem;
+            border-radius: 2.2rem;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .type-tile span {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        .instruction {
+            background: #0d203bb0;
+            border-radius: 3rem;
+            padding: 1.3rem 2rem;
+            border: 1px solid #2e4b78;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            margin-top: 1rem;
+        }
+
+        .empty-state {
+            background: #10243f80;
+            border-radius: 2.8rem;
+            padding: 2rem;
+            border: 1px dashed #3a5f8f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            color: #d1e2ff;
+            margin: 1.8rem 0 0.5rem;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.8rem;
+            color: #99b6e3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.7rem;
+            border-top: 1px solid #263f62;
+            padding-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+
+    <div class="myqr-card">
+        <div class="header">
+            <div class="brand">
+                <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
+                <div>
+                    <h1>MyQR</h1>
+                    <span>upload · image, pdf, audio</span>
+                </div>
+            </div>
+            <div class="pill-note">
+                <i class="fas-regular fa-cloud-upload"></i> file upload ready
+            </div>
+        </div>
+
+        <!-- exactly 4 types: url, image, pdf, audio -->
+        <div class="type-grid">
+            <div class="type-tile" data-type="url" id="tileUrl">
+                <i class="fas fa-link"></i>
+                <span>URL / Link</span>
+            </div>
+            <div class="type-tile" data-type="image" id="tileImage">
+                <i class="fas fa-image"></i>
+                <span>Image</span>
+            </div>
+            <div class="type-tile" data-type="pdf" id="tilePdf">
+                <i class="fas fa-file-pdf"></i>
+                <span>PDF</span>
+            </div>
+            <div class="type-tile" data-type="audio" id="tileAudio">
+                <i class="fas fa-music"></i>
+                <span>Audio</span>
+            </div>
+        </div>
+
+        <div class="instruction">
+            <i class="fas fa-arrow-pointer"></i> Click a tile → upload file or enter URL → QR opens in new tab with share
+        </div>
+
+        <div class="empty-state">
+            <i class="fas fa-qrcode fa-2x"></i>
+            <span>No QR on main page. After input, QR appears in a new tab ready to share (WhatsApp etc).</span>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas-regular fa-circle-check"></i>
+            <span>MyQR · image/pdf/audio upload → hosted link simulation</span>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // get tiles
+            const urlTile = document.getElementById('tileUrl');
+            const imageTile = document.getElementById('tileImage');
+            const pdfTile = document.getElementById('tilePdf');
+            const audioTile = document.getElementById('tileAudio');
+
+            // function to create a custom modal with either input field or file upload
+            function handleTypeClick(type) {
+                // remove any existing modal
+                const existingModal = document.getElementById('customInputModal');
+                if (existingModal) existingModal.remove();
+
+                // build modal
+                const modal = document.createElement('div');
+                modal.id = 'customInputModal';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+                modal.style.backdropFilter = 'blur(8px)';
+                modal.style.display = 'flex';
+                modal.style.alignItems = 'center';
+                modal.style.justifyContent = 'center';
+                modal.style.zIndex = '9999';
+                modal.style.fontFamily = "'Inter', sans-serif";
+
+                const modalContent = document.createElement('div');
+                modalContent.style.background = '#132237';
+                modalContent.style.border = '1px solid #3d6190';
+                modalContent.style.borderRadius = '2.5rem';
+                modalContent.style.padding = '2.2rem 2rem';
+                modalContent.style.maxWidth = '450px';
+                modalContent.style.width = '90%';
+                modalContent.style.boxShadow = '0 40px 70px #030613';
+                modalContent.style.color = 'white';
+
+                let typeDisplay, iconClass, inputHtml;
+
+                if (type === 'url') {
+                    typeDisplay = 'URL / Link';
+                    iconClass = 'fa-link';
+                    inputHtml = `
+                        <p style="margin-bottom:1rem; color:#b5d0f5;">Enter your link</p>
+                        <input type="text" id="modalInput" placeholder="https:// example.com" value="https://" style="width:100%; padding:1rem 1.5rem; border-radius:3rem; border:1px solid #3f6190; background:#0e1d33; color:white; font-size:1rem; outline:none; margin-bottom:1.5rem;">
+                    `;
+                } else {
+                    // image, pdf, audio: file upload
+                    let acceptAttr = '';
+                    if (type === 'image') {
+                        typeDisplay = 'Image';
+                        iconClass = 'fa-image';
+                        acceptAttr = 'image/*';
+                    } else if (type === 'pdf') {
+                        typeDisplay = 'PDF';
+                        iconClass = 'fa-file-pdf';
+                        acceptAttr = '.pdf,application/pdf';
+                    } else {
+                        typeDisplay = 'Audio';
+                        iconClass = 'fa-music';
+                        acceptAttr = 'audio/*';
+                    }
+
+                    inputHtml = `
+                        <p style="margin-bottom:1rem; color:#b5d0f5;">Upload your ${type} file</p>
+                        <div style="background:#0e1d33; border-radius:3rem; padding:1rem 1.5rem; border:1px solid #3f6190; margin-bottom:1rem;">
+                            <label for="fileUpload" style="display:flex; align-items:center; gap:0.8rem; cursor:pointer;">
+                                <i class="fas fa-cloud-upload-alt" style="font-size:1.4rem; color:#8db4f0;"></i>
+                                <span id="fileLabel">Choose file...</span>
+                            </label>
+                            <input type="file" id="fileUpload" accept="${acceptAttr}" style="display:none;">
+                        </div>
+                        <div id="fileNameDisplay" style="font-size:0.9rem; color:#b0caf5; margin-bottom:1.5rem; word-break:break-all;"></div>
+                    `;
+                }
+
+                modalContent.innerHTML = `
+                    <div style="display: flex; align-items: center; gap:1rem; margin-bottom:1.8rem;">
+                        <i class="fas ${iconClass}" style="font-size:2rem; background:#1e385b; padding:0.8rem; border-radius:1.6rem;"></i>
+                        <span style="font-size:1.4rem; font-weight:500;">${typeDisplay}</span>
+                    </div>
+                    ${inputHtml}
+                    <div style="display:flex; gap:0.8rem; justify-content:flex-end;">
+                        <button id="modalCancel" style="background:transparent; border:1px solid #5b7cb0; padding:0.7rem 1.5rem; border-radius:3rem; color:white; cursor:pointer;">Cancel</button>
+                        <button id="modalGenerate" style="background:#2a4d82; border:none; padding:0.7rem 1.8rem; border-radius:3rem; font-weight:600; color:white; cursor:pointer; border:1px solid #ffffff60;">Generate QR</button>
+                    </div>
+                `;
+
+                modal.appendChild(modalContent);
+                document.body.appendChild(modal);
+
+                // special handling for file input
+                if (type !== 'url') {
+                    const fileInput = document.getElementById('fileUpload');
+                    const fileLabel = document.getElementById('fileLabel');
+                    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+                    fileInput.addEventListener('change', function(e) {
+                        if (fileInput.files.length > 0) {
+                            const name = fileInput.files[0].name;
+                            fileLabel.innerHTML = `<i class="fas fa-check-circle" style="color:#6fcf97;"></i> ${name.length > 30 ? name.slice(0,27)+'…' : name}`;
+                            fileNameDisplay.innerText = 'Selected: ' + name;
+                        } else {
+                            fileLabel.innerHTML = 'Choose file...';
+                            fileNameDisplay.innerText = '';
+                        }
+                    });
+                }
+
+                // focus if input exists
+                setTimeout(() => {
+                    if (type === 'url') document.getElementById('modalInput')?.focus();
+                }, 100);
+
+                // cancel
+                document.getElementById('modalCancel').addEventListener('click', () => {
+                    modal.remove();
+                });
+
+                // generate action
+                document.getElementById('modalGenerate').addEventListener('click', () => {
+                    if (type === 'url') {
+                        const inputVal = document.getElementById('modalInput').value.trim();
+                        if (inputVal === '') {
+                            alert('Please enter a URL');
+                            return;
+                        }
+                        modal.remove();
+                        openQRInNewTab(type, inputVal, null); // no file
+                    } else {
+                        // file upload case
+                        const fileInput = document.getElementById('fileUpload');
+                        if (!fileInput.files || fileInput.files.length === 0) {
+                            alert('Please select a file');
+                            return;
+                        }
+                        const file = fileInput.files[0];
+                        modal.remove();
+                        // simulate hosting: generate a fake link based on file name
+                        // In a real app you would upload to server. Here we simulate a hosted link.
+                        const fakeUrl = `https://myqr.host/${type}/${encodeURIComponent(file.name)}`;
+                        openQRInNewTab(type, fakeUrl, file); // pass file for reference (optional)
+                    }
+                });
+
+                // enter key for url only
+                if (type === 'url') {
+                    const inp = document.getElementById('modalInput');
+                    inp.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            document.getElementById('modalGenerate').click();
+                        }
+                    });
+                }
+            }
+
+            function openQRInNewTab(type, finalText, file = null) {
+                // make sure link has protocol for display, but for file uploads we already have fake https://myqr.host/...
+                let displayText = finalText;
+                let iconFa = 'fa-link';
+                if (type === 'image') iconFa = 'fa-image';
+                else if (type === 'pdf') iconFa = 'fa-file-pdf';
+                else if (type === 'audio') iconFa = 'fa-music';
+                else iconFa = 'fa-link';
+
+                // add protocol if missing and type is url (for user typed)
+                if (type === 'url' && !finalText.match(/^[a-zA-Z]+:\/\//)) {
+                    finalText = 'https://' + finalText;
+                    displayText = finalText;
+                }
+
+                // Build the new tab HTML with QR code and WhatsApp share
+                const pageContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>MyQR · ${type}</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <style>
+                        * { margin:0; padding:0; box-sizing:border-box; }
+                        body {
+                            background: #0e1c2f;
+                            font-family: 'Inter', sans-serif;
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 1.5rem;
+                            color: #edf3ff;
+                        }
+                        .qr-share-card {
+                            background: #1c314ce0;
+                            backdrop-filter: blur(16px);
+                            border: 1px solid #4a6f9f;
+                            border-radius: 3rem;
+                            max-width: 650px;
+                            width: 100%;
+                            padding: 2rem 2rem 2.5rem;
+                            box-shadow: 0 40px 70px -15px #020916;
+                        }
+                        .type-icon {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.8rem;
+                            background: #0f2842;
+                            border-radius: 3rem;
+                            padding: 0.8rem 1.8rem;
+                            width: fit-content;
+                            margin-bottom: 2rem;
+                            border: 1px solid #597fb5;
+                        }
+                        .qr-container {
+                            background: white;
+                            border-radius: 2.5rem;
+                            padding: 1.5rem;
+                            display: inline-block;
+                            margin: 1.5rem 0;
+                            box-shadow: 0 20px 30px -10px #030a14;
+                        }
+                        canvas {
+                            display: block;
+                            width: 240px;
+                            height: 240px;
+                            border-radius: 1.5rem;
+                        }
+                        .link-preview {
+                            background: #10243f;
+                            border-radius: 3rem;
+                            padding: 0.8rem 1.5rem;
+                            word-break: break-all;
+                            border: 1px solid #375f8f;
+                            margin: 1.2rem 0 1.8rem;
+                        }
+                        .share-row {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 0.8rem;
+                            align-items: center;
+                            margin-top: 1.2rem;
+                        }
+                        .btn {
+                            background: #2c4b79;
+                            border: none;
+                            color: white;
+                            padding: 0.9rem 1.8rem;
+                            border-radius: 3rem;
+                            font-weight: 500;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.6rem;
+                            cursor: pointer;
+                            border: 1px solid #ffffff50;
+                            text-decoration: none;
+                            font-size: 0.95rem;
+                        }
+                        .btn-wa {
+                            background: #25D366;
+                            color: #111;
+                            font-weight: 600;
+                        }
+                        .btn-wa i { color: #075e54; }
+                        .footer-note { margin-top: 2rem; font-size:0.8rem; color:#90add5; }
+                    </style>
+                </head>
+                <body>
+                    <div class="qr-share-card">
+                        <div class="type-icon"><i class="fas ${iconFa}"></i> <span>${type.toUpperCase()} QR ready</span></div>
+                        <div style="text-align: center;">
+                            <div class="qr-container">
+                                <canvas id="qrCanvas" width="240" height="240"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="link-preview" id="previewLink">${displayText}</div>
+
+                        <div class="share-row">
+                            <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> Download PNG</button>
+                            <a href="#" id="whatsappShareBtn" class="btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> Share on WhatsApp</a>
+                        </div>
+                        <div style="margin-top:1rem;">
+                            <button class="btn" id="copyImageBtn"><i class="fas fa-copy"></i> Copy QR image</button>
+                        </div>
+                        <div class="footer-note" id="messageArea"><i class="fas fa-check-circle"></i> QR generated — share anywhere</div>
+                    </div>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+                    <script>
+                        (function() {
+                            const text = ${JSON.stringify(finalText)};
+                            const canvas = document.getElementById('qrCanvas');
+                            
+                            // generate QR
+                            try {
+                                const tempDiv = document.createElement('div');
+                                new QRCode(tempDiv, {
+                                    text: text,
+                                    width: 240,
+                                    height: 240,
+                                    colorDark: "#0d2642",
+                                    colorLight: "#ffffff",
+                                    correctLevel: QRCode.CorrectLevel.M
+                                });
+                                setTimeout(() => {
+                                    const qrCanvasElem = tempDiv.querySelector('canvas');
+                                    if (qrCanvasElem) {
+                                        const ctx = canvas.getContext('2d');
+                                        ctx.clearRect(0,0,240,240);
+                                        ctx.drawImage(qrCanvasElem, 0, 0, 240, 240);
+                                        document.getElementById('messageArea').innerHTML = '<i class="fas fa-check-circle"></i> QR ready — you can share';
+                                    }
+                                }, 50);
+                            } catch(e) { console.warn(e); }
+
+                            // download
+                            document.getElementById('downloadBtn').addEventListener('click', () => {
+                                const a = document.createElement('a');
+                                a.download = 'myqr-${type}-'+Date.now()+'.png';
+                                a.href = canvas.toDataURL('image/png');
+                                a.click();
+                            });
+
+                            // copy image
+                            document.getElementById('copyImageBtn').addEventListener('click', async () => {
+                                try {
+                                    const blob = await new Promise(res => canvas.toBlob(res));
+                                    await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
+                                    document.getElementById('messageArea').innerHTML = '<i class="fas fa-check-circle"></i> QR image copied!';
+                                } catch {
+                                    navigator.clipboard.writeText(text).then(() => document.getElementById('messageArea').innerHTML = '<i class="fas fa-info"></i> link copied (image copy unsupported)');
+                                }
+                            });
+
+                            // WhatsApp share: create text with the link
+                            const waBtn = document.getElementById('whatsappShareBtn');
+                            const encodedText = encodeURIComponent('Check out my QR code from MyQR: ' + text);
+                            waBtn.href = 'https://wa.me/?text=' + encodedText;
+                        })();
+                    <\/script>
+                </body>
+                </html>
+                `;
+
+                const blob = new Blob([pageContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+            }
+
+            // assign clicks
+            urlTile.addEventListener('click', () => handleTypeClick('url'));
+            imageTile.addEventListener('click', () => handleTypeClick('image'));
+            pdfTile.addEventListener('click', () => handleTypeClick('pdf'));
+            audioTile.addEventListener('click', () => handleTypeClick('audio'));
+
+        })();
+    </script>
+</body>
+</html>
