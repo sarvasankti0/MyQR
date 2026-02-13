@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQR · url or image (soon)</title>
+    <title>MyQR · url (now) + image (soon)</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -218,11 +218,11 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>url now · image soon</span>
+                    <span>choose your type</span>
                 </div>
             </div>
             <div class="pill-note">
-                <i class="fas-regular fa-pen-ruler"></i> two simple options
+                <i class="fas-regular fa-pen-ruler"></i> url · image (soon)
             </div>
         </div>
 
@@ -238,7 +238,7 @@
             <div class="option-card" id="imageOption">
                 <i class="fas fa-image"></i>
                 <h3>Image</h3>
-                <p>QR from image · soon</p>
+                <p>QR from image</p>
             </div>
         </div>
 
@@ -258,9 +258,9 @@
             const imageOption = document.getElementById('imageOption');
             const mainMessage = document.getElementById('mainMessage');
 
-            // ---------- URL: open new tab with simple input & generator ----------
+            // ---------- URL: open fresh tab with input & generate (with back button) ----------
             urlOption.addEventListener('click', () => {
-                // Create a new tab with a minimal URL-to-QR page
+                // Fresh tab page for URL input, QR generation, and a back button
                 const urlPage = `
                 <!DOCTYPE html>
                 <html>
@@ -295,6 +295,21 @@
                             box-shadow: 0 40px 70px -15px #020916;
                             text-align: center;
                         }
+                        .back-link {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            background: #0e2642;
+                            padding: 0.6rem 1.5rem;
+                            border-radius: 3rem;
+                            width: fit-content;
+                            margin-bottom: 2rem;
+                            border: 1px solid #527bb0;
+                            cursor: pointer;
+                            color: white;
+                            text-decoration: none;
+                        }
+                        .back-link i { color: #9bc0ff; }
                         h2 {
                             display: flex;
                             align-items: center;
@@ -374,6 +389,11 @@
                 </head>
                 <body>
                     <div class="glass-panel">
+                        <!-- Back button (click to close tab or go back) -->
+                        <div class="back-link" onclick="window.close();">
+                            <i class="fas fa-arrow-left"></i> back to MyQR
+                        </div>
+
                         <h2><i class="fas fa-link"></i> URL to QR</h2>
                         <div class="input-group">
                             <i class="fas fa-globe"></i>
@@ -381,15 +401,16 @@
                             <button id="generateBtn"><i class="fas fa-qrcode"></i> generate</button>
                         </div>
 
-                        <canvas id="qrCanvas" width="200" height="200"></canvas>
+                        <!-- QR appears after clicking generate -->
+                        <canvas id="qrCanvas" width="200" height="200" style="display: none;"></canvas>
 
-                        <div class="action-buttons">
+                        <div class="action-buttons" id="actionButtons" style="display: none;">
                             <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> PNG</button>
                             <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> copy QR</button>
                             <a href="#" id="whatsappBtn" class="btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> share link</a>
                         </div>
 
-                        <div class="footer-msg" id="message">enter url and generate</div>
+                        <div class="footer-msg" id="message">enter url and click generate</div>
                     </div>
 
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -398,19 +419,20 @@
                             const urlInput = document.getElementById('urlInput');
                             const generateBtn = document.getElementById('generateBtn');
                             const canvas = document.getElementById('qrCanvas');
+                            const actionButtons = document.getElementById('actionButtons');
                             const downloadBtn = document.getElementById('downloadBtn');
                             const copyBtn = document.getElementById('copyBtn');
                             const whatsappBtn = document.getElementById('whatsappBtn');
                             const msg = document.getElementById('message');
 
-                            let currentUrl = 'https://myqr.site';
+                            let currentUrl = '';
 
                             function showMsg(text, err) {
                                 msg.innerText = text;
                                 msg.style.color = err ? '#faa' : '#b3d1ff';
                             }
 
-                            function generateQR() {
+                            generateBtn.addEventListener('click', () => {
                                 let url = urlInput.value.trim();
                                 if (!url) {
                                     showMsg('enter url', true);
@@ -420,6 +442,7 @@
                                     url = 'https://' + url;
                                 }
                                 currentUrl = url;
+
                                 try {
                                     const tempDiv = document.createElement('div');
                                     new QRCode(tempDiv, {
@@ -430,24 +453,24 @@
                                         colorLight: "#ffffff",
                                         correctLevel: QRCode.CorrectLevel.M
                                     });
+
                                     setTimeout(() => {
-                                        const qrCanvas = tempDiv.querySelector('canvas');
-                                        if (qrCanvas) {
+                                        const qrCanvasElem = tempDiv.querySelector('canvas');
+                                        if (qrCanvasElem) {
                                             const ctx = canvas.getContext('2d');
                                             ctx.clearRect(0,0,200,200);
-                                            ctx.drawImage(qrCanvas, 0, 0, 200, 200);
-                                            showMsg('qr ready', false);
+                                            ctx.drawImage(qrCanvasElem, 0, 0, 200, 200);
+                                            canvas.style.display = 'block';
+                                            actionButtons.style.display = 'flex';
+                                            showMsg('qr generated', false);
+                                        } else {
+                                            showMsg('error, retry', true);
                                         }
                                     }, 30);
                                 } catch (e) {
-                                    showMsg('error', true);
+                                    showMsg('invalid input', true);
                                 }
-                            }
-
-                            generateQR();
-
-                            generateBtn.addEventListener('click', generateQR);
-                            urlInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') generateQR(); });
+                            });
 
                             downloadBtn.addEventListener('click', () => {
                                 const a = document.createElement('a');
@@ -462,14 +485,18 @@
                                     await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
                                     showMsg('qr copied', false);
                                 } catch {
-                                    navigator.clipboard.writeText(currentUrl).then(() => showMsg('url copied', false));
+                                    if (currentUrl) {
+                                        navigator.clipboard.writeText(currentUrl).then(() => showMsg('url copied', false));
+                                    }
                                 }
                             });
 
                             whatsappBtn.addEventListener('click', (e) => {
                                 e.preventDefault();
-                                const text = encodeURIComponent('Check out this link from MyQR: ' + currentUrl);
-                                window.open('https://wa.me/?text=' + text, '_blank');
+                                if (currentUrl) {
+                                    const text = encodeURIComponent('Check out this link from MyQR: ' + currentUrl);
+                                    window.open('https://wa.me/?text=' + text, '_blank');
+                                }
                             });
                         })();
                     <\/script>
@@ -484,9 +511,8 @@
                 mainMessage.innerHTML = '<i class="fas fa-check"></i> URL tab opened';
             });
 
-            // ---------- IMAGE: coming soon ----------
+            // ---------- IMAGE: coming soon with back option ----------
             imageOption.addEventListener('click', () => {
-                // Open a new tab with "coming soon" message
                 const soonPage = `
                 <!DOCTYPE html>
                 <html>
@@ -515,11 +541,25 @@
                             backdrop-filter: blur(16px);
                             border: 1px solid #4a6f9f;
                             border-radius: 3.5rem;
-                            max-width: 500px;
+                            max-width: 550px;
                             width: 100%;
                             padding: 3rem 2rem;
                             box-shadow: 0 40px 70px -15px #020916;
                             text-align: center;
+                        }
+                        .back-link {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                            background: #0e2642;
+                            padding: 0.6rem 1.5rem;
+                            border-radius: 3rem;
+                            width: fit-content;
+                            margin-bottom: 2rem;
+                            border: 1px solid #527bb0;
+                            cursor: pointer;
+                            color: white;
+                            text-decoration: none;
                         }
                         i.big-icon {
                             font-size: 5rem;
@@ -533,26 +573,27 @@
                             font-size: 2.2rem;
                             margin-bottom: 1rem;
                         }
-                        p {
-                            font-size: 1.2rem;
-                            color: #b5d0ff;
-                            margin-bottom: 2rem;
-                        }
-                        .soon-badge {
-                            background: #2a4d82;
-                            padding: 0.8rem 2rem;
-                            border-radius: 3rem;
-                            display: inline-block;
+                        .soon-message {
+                            font-size: 1.4rem;
+                            color: #ffd966;
+                            background: #1f4172;
+                            padding: 1rem 2rem;
+                            border-radius: 4rem;
+                            margin: 1.5rem 0;
                             font-weight: 600;
                         }
                     </style>
                 </head>
                 <body>
                     <div class="glass-panel">
+                        <div class="back-link" onclick="window.close();">
+                            <i class="fas fa-arrow-left"></i> back to MyQR
+                        </div>
                         <i class="fas fa-image big-icon"></i>
                         <h2>Image to QR</h2>
-                        <p>Sorry, this feature is coming soon.</p>
-                        <div class="soon-badge"><i class="fas fa-clock"></i> under development</div>
+                        <div class="soon-message">
+                            <i class="fas fa-clock"></i> Sorry, This Feature Will Coming Soon
+                        </div>
                     </div>
                 </body>
                 </html>
