@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQR · url (now) + image (soon)</title>
+    <title>MyQR · share qr image on whatsapp</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -218,11 +218,11 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>choose your type</span>
+                    <span>share qr image on whatsapp</span>
                 </div>
             </div>
             <div class="pill-note">
-                <i class="fas-regular fa-pen-ruler"></i> url · image (soon)
+                <i class="fas-regular fa-message"></i> + custom message
             </div>
         </div>
 
@@ -248,7 +248,7 @@
 
         <div class="footer-note">
             <i class="fas-regular fa-circle-check"></i>
-            <span>MyQR · url works now · image coming soon</span>
+            <span>MyQR · share qr image + "To convert URL to QR then checkout this website = https://sarvasankti0.github.io/MyQR/"</span>
         </div>
     </div>
 
@@ -257,6 +257,9 @@
             const urlOption = document.getElementById('urlOption');
             const imageOption = document.getElementById('imageOption');
             const mainMessage = document.getElementById('mainMessage');
+
+            // Custom message to include with the image on WhatsApp
+            const whatsappMessage = "To convert URL to QR then checkout this website = https://sarvasankti0.github.io/MyQR/";
 
             // ---------- URL: open fresh tab with input & generate (with back button) ----------
             urlOption.addEventListener('click', () => {
@@ -377,9 +380,10 @@
                             align-items: center;
                             gap: 0.5rem;
                         }
-                        .btn-wa {
+                        .btn-share {
                             background: #25D366;
                             color: #111;
+                            font-weight: 600;
                         }
                         .footer-msg {
                             margin-top: 1rem;
@@ -407,7 +411,7 @@
                         <div class="action-buttons" id="actionButtons" style="display: none;">
                             <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> PNG</button>
                             <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> copy QR</button>
-                            <a href="#" id="whatsappBtn" class="btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> share link</a>
+                            <button class="btn btn-share" id="shareBtn"><i class="fab fa-whatsapp"></i> share QR</button>
                         </div>
 
                         <div class="footer-msg" id="message">enter url and click generate</div>
@@ -422,10 +426,11 @@
                             const actionButtons = document.getElementById('actionButtons');
                             const downloadBtn = document.getElementById('downloadBtn');
                             const copyBtn = document.getElementById('copyBtn');
-                            const whatsappBtn = document.getElementById('whatsappBtn');
+                            const shareBtn = document.getElementById('shareBtn');
                             const msg = document.getElementById('message');
 
                             let currentUrl = '';
+                            const customMessage = ${JSON.stringify(whatsappMessage)};
 
                             function showMsg(text, err) {
                                 msg.innerText = text;
@@ -491,11 +496,47 @@
                                 }
                             });
 
-                            whatsappBtn.addEventListener('click', (e) => {
-                                e.preventDefault();
-                                if (currentUrl) {
-                                    const text = encodeURIComponent('Check out this link from MyQR: ' + currentUrl);
-                                    window.open('https://wa.me/?text=' + text, '_blank');
+                            // WhatsApp share: send QR image with custom message
+                            shareBtn.addEventListener('click', async () => {
+                                try {
+                                    // For WhatsApp, we need to share the image and text together.
+                                    // Since WhatsApp Web API doesn't directly accept images via URL, we use a workaround:
+                                    // We'll create a download link for the image and also open WhatsApp with the message.
+                                    // But to truly share the image, we need to use the Web Share API if available.
+                                    if (navigator.canShare && navigator.canShare({ files: [new File([], 'qr.png')] })) {
+                                        // Convert canvas to blob and share using Web Share API
+                                        const blob = await new Promise(res => canvas.toBlob(res));
+                                        const file = new File([blob], 'myqr.png', { type: 'image/png' });
+                                        const shareData = {
+                                            title: 'MyQR Code',
+                                            text: customMessage,
+                                            files: [file]
+                                        };
+                                        await navigator.share(shareData);
+                                        showMsg('shared via system', false);
+                                    } else {
+                                        // Fallback: Open WhatsApp with the message and instruct user to send image manually
+                                        const encodedText = encodeURIComponent(customMessage + '\\n\\n(Send the QR image manually from downloads)');
+                                        window.open('https://wa.me/?text=' + encodedText, '_blank');
+                                        
+                                        // Also trigger download so user can attach the image
+                                        const a = document.createElement('a');
+                                        a.download = 'myqr-'+Date.now()+'.png';
+                                        a.href = canvas.toDataURL('image/png');
+                                        a.click();
+                                        
+                                        showMsg('image downloaded - now send it on WhatsApp with the message', false);
+                                    }
+                                } catch (err) {
+                                    console.warn('share error:', err);
+                                    // Final fallback: just open WhatsApp with message and download image
+                                    const encodedText = encodeURIComponent(customMessage);
+                                    window.open('https://wa.me/?text=' + encodedText, '_blank');
+                                    const a = document.createElement('a');
+                                    a.download = 'myqr-'+Date.now()+'.png';
+                                    a.href = canvas.toDataURL('image/png');
+                                    a.click();
+                                    showMsg('image downloaded - send it on WhatsApp', false);
                                 }
                             });
                         })();
