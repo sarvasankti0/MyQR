@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQR · share qr image on whatsapp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>MyQR · generate below input</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 1rem;
             position: relative;
             background: #0b1421;
             color: #eef4ff;
@@ -68,49 +68,51 @@
 
         /* main glass card */
         .myqr-card {
-            background: rgba(16, 30, 48, 0.7);
+            background: rgba(16, 30, 48, 0.75);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 3.5rem;
+            border-radius: 2.5rem;
             width: 100%;
-            max-width: 800px;
-            padding: 2.8rem 2.5rem;
+            max-width: 900px;
+            padding: clamp(1.5rem, 5vw, 3rem) clamp(1.2rem, 4vw, 2.8rem);
             box-shadow: 0 50px 80px -20px #030613, inset 0 0 0 1px rgba(255,255,255,0.04);
             text-align: center;
+            margin: 0 auto;
         }
 
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 2.5rem;
+            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem 1rem;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
+            flex-wrap: wrap;
         }
 
         .brand-icon {
             background: #ffffff12;
             border: 1px solid #ffffff30;
             color: white;
-            width: 3.8rem;
-            height: 3.8rem;
-            border-radius: 1.8rem;
+            width: clamp(2.8rem, 8vw, 3.8rem);
+            height: clamp(2.8rem, 8vw, 3.8rem);
+            border-radius: 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: clamp(1.4rem, 5vw, 2rem);
             box-shadow: 0 10px 18px -8px #01060e;
         }
 
         .brand h1 {
-            font-size: 2.4rem;
+            font-size: clamp(1.8rem, 6vw, 2.4rem);
             font-weight: 600;
             letter-spacing: -0.02em;
             background: linear-gradient(to right, #ffffff, #c7ddff);
@@ -121,7 +123,7 @@
         }
 
         .brand span {
-            font-size: 0.9rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
             color: #aac2ee;
             display: block;
             font-weight: 300;
@@ -130,31 +132,34 @@
         .pill-note {
             background: #1b314f80;
             border: 1px solid #3a5d8c;
-            padding: 0.6rem 1.5rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 3rem;
-            font-size: 0.9rem;
+            font-size: clamp(0.75rem, 2.5vw, 0.9rem);
             color: #d6e8ff;
+            white-space: nowrap;
         }
 
         /* two option cards */
         .options-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 2rem;
+            gap: clamp(1rem, 3vw, 2rem);
             justify-content: center;
-            margin: 2.8rem 0 2rem;
+            margin: clamp(2rem, 5vw, 3rem) 0 1.5rem;
         }
 
         .option-card {
             background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 2.8rem;
-            padding: 2rem 1.8rem;
-            width: 240px;
+            border-radius: 2.5rem;
+            padding: clamp(1.2rem, 4vw, 2rem) clamp(1rem, 3vw, 1.8rem);
+            width: min(240px, 80%);
+            max-width: 280px;
+            flex: 0 1 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             cursor: pointer;
             transition: all 0.2s ease;
             backdrop-filter: blur(8px);
@@ -168,44 +173,56 @@
         }
 
         .option-card i {
-            font-size: 3rem;
+            font-size: clamp(2.2rem, 7vw, 3rem);
             color: #cde0ff;
             background: #0e2545b0;
-            padding: 1.2rem;
-            border-radius: 2.8rem;
-            width: 6rem;
-            height: 6rem;
+            padding: clamp(0.8rem, 2.5vw, 1.2rem);
+            border-radius: 2.5rem;
+            width: clamp(4.5rem, 14vw, 6rem);
+            height: clamp(4.5rem, 14vw, 6rem);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .option-card h3 {
-            font-size: 1.8rem;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
             font-weight: 600;
             color: white;
         }
 
         .option-card p {
             color: #b5d0ff;
-            font-size: 1rem;
+            font-size: clamp(0.8rem, 2.5vw, 1rem);
+        }
+
+        .message-area {
+            min-height: 2.5rem;
+            color: #b3d1ff;
+            font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .footer-note {
-            margin-top: 2.5rem;
-            font-size: 0.9rem;
+            margin-top: clamp(1.5rem, 4vw, 2.2rem);
+            font-size: clamp(0.7rem, 2.2vw, 0.85rem);
             color: #99b6e3;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.7rem;
+            gap: 0.5rem 0.8rem;
             border-top: 1px solid #263f62;
-            padding-top: 1.8rem;
+            padding-top: clamp(1.2rem, 3vw, 1.8rem);
+            flex-wrap: wrap;
         }
 
-        .message-area {
-            min-height: 2rem;
-            color: #b3d1ff;
+        button, .option-card, .back-link {
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -218,7 +235,7 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>share qr image on whatsapp</span>
+                    <span>generate button below input</span>
                 </div>
             </div>
             <div class="pill-note">
@@ -229,13 +246,13 @@
         <!-- two option cards: URL and IMAGE -->
         <div class="options-row">
             <!-- URL Card -->
-            <div class="option-card" id="urlOption">
+            <div class="option-card" id="urlOption" role="button" tabindex="0" aria-label="URL to QR">
                 <i class="fas fa-link"></i>
                 <h3>URL</h3>
                 <p>Convert link to QR</p>
             </div>
             <!-- Image Card (coming soon) -->
-            <div class="option-card" id="imageOption">
+            <div class="option-card" id="imageOption" role="button" tabindex="0" aria-label="Image to QR coming soon">
                 <i class="fas fa-image"></i>
                 <h3>Image</h3>
                 <p>QR from image</p>
@@ -248,7 +265,7 @@
 
         <div class="footer-note">
             <i class="fas-regular fa-circle-check"></i>
-            <span>MyQR · share qr image + "To convert URL to QR then checkout this website = https://sarvasankti0.github.io/MyQR/"</span>
+            <span>To convert URL to QR then checkout this website " https://sarvasankti0.github.io/MyQR/ "</span>
         </div>
     </div>
 
@@ -258,18 +275,18 @@
             const imageOption = document.getElementById('imageOption');
             const mainMessage = document.getElementById('mainMessage');
 
-            // Custom message to include with the image on WhatsApp
-            const whatsappMessage = "To convert URL to QR then checkout this website = https://sarvasankti0.github.io/MyQR/";
+            // Custom message exactly as requested
+            const whatsappMessage = 'To convert URL to QR then checkout this website " https://sarvasankti0.github.io/MyQR/ "';
 
-            // ---------- URL: open fresh tab with input & generate (with back button) ----------
+            // ---------- URL: open fresh tab with input & generate (button below input) ----------
             urlOption.addEventListener('click', () => {
                 // Fresh tab page for URL input, QR generation, and a back button
                 const urlPage = `
                 <!DOCTYPE html>
-                <html>
+                <html lang="en">
                 <head>
                     <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
                     <title>MyQR · generate from url</title>
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -284,94 +301,114 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            padding: 1.5rem;
+                            padding: 1rem;
                             color: #edf3ff;
                         }
                         .glass-panel {
                             background: #1c314ce0;
                             backdrop-filter: blur(16px);
+                            -webkit-backdrop-filter: blur(16px);
                             border: 1px solid #4a6f9f;
-                            border-radius: 3rem;
-                            max-width: 650px;
+                            border-radius: 2.5rem;
+                            max-width: 600px;
                             width: 100%;
-                            padding: 2.5rem 2rem;
+                            padding: clamp(1.5rem, 5vw, 2.5rem) clamp(1.2rem, 4vw, 2rem);
                             box-shadow: 0 40px 70px -15px #020916;
                             text-align: center;
                         }
                         .back-link {
-                            display: flex;
+                            display: inline-flex;
                             align-items: center;
                             gap: 0.5rem;
                             background: #0e2642;
-                            padding: 0.6rem 1.5rem;
+                            padding: 0.6rem 1.4rem;
                             border-radius: 3rem;
-                            width: fit-content;
-                            margin-bottom: 2rem;
+                            margin-bottom: 1.5rem;
                             border: 1px solid #527bb0;
                             cursor: pointer;
                             color: white;
                             text-decoration: none;
+                            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+                            touch-action: manipulation;
                         }
-                        .back-link i { color: #9bc0ff; }
                         h2 {
                             display: flex;
                             align-items: center;
                             gap: 0.8rem;
                             justify-content: center;
-                            margin-bottom: 2rem;
+                            font-size: clamp(1.4rem, 5vw, 1.8rem);
+                            margin-bottom: 1.5rem;
+                            flex-wrap: wrap;
                         }
-                        .input-group {
+                        /* input box */
+                        .input-field {
                             background: #0e1d33;
                             border: 1px solid #3a6190;
-                            border-radius: 4rem;
-                            padding: 0.2rem 0.2rem 0.2rem 1.8rem;
+                            border-radius: 3rem;
+                            padding: 0.8rem 1.5rem;
+                            margin: 1.5rem 0 1rem 0;
                             display: flex;
                             align-items: center;
-                            flex-wrap: wrap;
-                            margin: 2rem 0;
+                            gap: 0.8rem;
                         }
-                        .input-group i {
+                        .input-field i {
                             color: #8bb2f0;
+                            font-size: 1.2rem;
                         }
-                        .input-group input {
-                            flex: 1 1 200px;
+                        .input-field input {
+                            flex: 1;
                             background: transparent;
                             border: none;
-                            padding: 1rem 0.5rem;
                             color: white;
                             font-size: 1rem;
                             outline: none;
+                            width: 100%;
                         }
-                        .input-group button {
+                        .input-field input::placeholder {
+                            color: #7f9fc9;
+                        }
+                        /* generate button - below input with space */
+                        .generate-btn-container {
+                            margin: 1.5rem 0 2rem 0;
+                        }
+                        .generate-btn {
                             background: #2a4d82;
                             border: none;
                             color: white;
-                            padding: 0.8rem 2rem;
-                            border-radius: 4rem;
+                            padding: 1rem 2rem;
+                            border-radius: 3rem;
                             font-weight: 600;
+                            font-size: 1.1rem;
                             cursor: pointer;
                             border: 1px solid #ffffff60;
-                            white-space: nowrap;
+                            width: 100%;
+                            max-width: 300px;
+                            margin: 0 auto;
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 0.8rem;
+                            touch-action: manipulation;
                         }
                         canvas {
                             background: white;
                             border-radius: 2rem;
-                            padding: 0.8rem;
-                            width: 200px;
-                            height: 200px;
+                            padding: 0.5rem;
+                            width: min(220px, 70vw);
+                            height: min(220px, 70vw);
                             margin: 1rem auto;
                             display: block;
                         }
                         .action-buttons {
                             display: flex;
                             flex-wrap: wrap;
-                            gap: 0.8rem;
+                            gap: 0.7rem;
                             justify-content: center;
                             margin-top: 1.5rem;
                         }
                         .btn {
                             background: #1f3b60;
-                            padding: 0.7rem 1.5rem;
+                            padding: 0.8rem 1.4rem;
                             border-radius: 3rem;
                             color: white;
                             border: 1px solid #ffffff40;
@@ -379,6 +416,8 @@
                             display: inline-flex;
                             align-items: center;
                             gap: 0.5rem;
+                            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+                            touch-action: manipulation;
                         }
                         .btn-share {
                             background: #25D366;
@@ -388,24 +427,40 @@
                         .footer-msg {
                             margin-top: 1rem;
                             color: #b3d1ff;
+                            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
+                            min-height: 2rem;
+                        }
+                        @media (max-width: 480px) {
+                            .generate-btn {
+                                width: 100%;
+                            }
+                            .btn {
+                                flex: 1 1 auto;
+                            }
                         }
                     </style>
                 </head>
                 <body>
                     <div class="glass-panel">
-                        <!-- Back button (click to close tab or go back) -->
+                        <!-- Back button -->
                         <div class="back-link" onclick="window.close();">
                             <i class="fas fa-arrow-left"></i> back to MyQR
                         </div>
 
                         <h2><i class="fas fa-link"></i> URL to QR</h2>
-                        <div class="input-group">
+                        
+                        <!-- Input box -->
+                        <div class="input-field">
                             <i class="fas fa-globe"></i>
-                            <input type="text" id="urlInput" placeholder="https:// example.com" value="https://myqr.site">
-                            <button id="generateBtn"><i class="fas fa-qrcode"></i> generate</button>
+                            <input type="text" id="urlInput" placeholder="https:// example.com" value="https://myqr.site" inputmode="url">
                         </div>
 
-                        <!-- QR appears after clicking generate -->
+                        <!-- Generate button below with space -->
+                        <div class="generate-btn-container">
+                            <button class="generate-btn" id="generateBtn"><i class="fas fa-qrcode"></i> generate QR</button>
+                        </div>
+
+                        <!-- QR appears after generate -->
                         <canvas id="qrCanvas" width="200" height="200" style="display: none;"></canvas>
 
                         <div class="action-buttons" id="actionButtons" style="display: none;">
@@ -414,7 +469,7 @@
                             <button class="btn btn-share" id="shareBtn"><i class="fab fa-whatsapp"></i> share QR</button>
                         </div>
 
-                        <div class="footer-msg" id="message">enter url and click generate</div>
+                        <div class="footer-msg" id="message">enter url and click generate button</div>
                     </div>
 
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -499,12 +554,7 @@
                             // WhatsApp share: send QR image with custom message
                             shareBtn.addEventListener('click', async () => {
                                 try {
-                                    // For WhatsApp, we need to share the image and text together.
-                                    // Since WhatsApp Web API doesn't directly accept images via URL, we use a workaround:
-                                    // We'll create a download link for the image and also open WhatsApp with the message.
-                                    // But to truly share the image, we need to use the Web Share API if available.
                                     if (navigator.canShare && navigator.canShare({ files: [new File([], 'qr.png')] })) {
-                                        // Convert canvas to blob and share using Web Share API
                                         const blob = await new Promise(res => canvas.toBlob(res));
                                         const file = new File([blob], 'myqr.png', { type: 'image/png' });
                                         const shareData = {
@@ -515,21 +565,19 @@
                                         await navigator.share(shareData);
                                         showMsg('shared via system', false);
                                     } else {
-                                        // Fallback: Open WhatsApp with the message and instruct user to send image manually
-                                        const encodedText = encodeURIComponent(customMessage + '\\n\\n(Send the QR image manually from downloads)');
+                                        // Fallback: open WhatsApp with message + download image
+                                        const encodedText = encodeURIComponent(customMessage + '\\n\\n(Send the QR image from downloads)');
                                         window.open('https://wa.me/?text=' + encodedText, '_blank');
                                         
-                                        // Also trigger download so user can attach the image
                                         const a = document.createElement('a');
                                         a.download = 'myqr-'+Date.now()+'.png';
                                         a.href = canvas.toDataURL('image/png');
                                         a.click();
                                         
-                                        showMsg('image downloaded - now send it on WhatsApp with the message', false);
+                                        showMsg('image downloaded - now send it on WhatsApp', false);
                                     }
                                 } catch (err) {
-                                    console.warn('share error:', err);
-                                    // Final fallback: just open WhatsApp with message and download image
+                                    console.warn(err);
                                     const encodedText = encodeURIComponent(customMessage);
                                     window.open('https://wa.me/?text=' + encodedText, '_blank');
                                     const a = document.createElement('a');
@@ -556,10 +604,10 @@
             imageOption.addEventListener('click', () => {
                 const soonPage = `
                 <!DOCTYPE html>
-                <html>
+                <html lang="en">
                 <head>
                     <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
                     <title>MyQR · image feature</title>
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -574,54 +622,58 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
-                            padding: 1.5rem;
+                            padding: 1rem;
                             color: #edf3ff;
                         }
                         .glass-panel {
                             background: #1c314ce0;
                             backdrop-filter: blur(16px);
+                            -webkit-backdrop-filter: blur(16px);
                             border: 1px solid #4a6f9f;
-                            border-radius: 3.5rem;
+                            border-radius: 2.5rem;
                             max-width: 550px;
                             width: 100%;
-                            padding: 3rem 2rem;
+                            padding: clamp(1.8rem, 6vw, 3rem) clamp(1.2rem, 4vw, 2rem);
                             box-shadow: 0 40px 70px -15px #020916;
                             text-align: center;
                         }
                         .back-link {
-                            display: flex;
+                            display: inline-flex;
                             align-items: center;
                             gap: 0.5rem;
                             background: #0e2642;
-                            padding: 0.6rem 1.5rem;
+                            padding: 0.6rem 1.4rem;
                             border-radius: 3rem;
-                            width: fit-content;
-                            margin-bottom: 2rem;
+                            margin-bottom: 1.5rem;
                             border: 1px solid #527bb0;
                             cursor: pointer;
                             color: white;
                             text-decoration: none;
+                            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+                            touch-action: manipulation;
                         }
                         i.big-icon {
-                            font-size: 5rem;
+                            font-size: clamp(3.5rem, 12vw, 5rem);
                             color: #cde0ff;
                             background: #0e2545b0;
-                            padding: 1.5rem;
-                            border-radius: 4rem;
+                            padding: clamp(1rem, 4vw, 1.5rem);
+                            border-radius: 3.5rem;
                             margin-bottom: 1.5rem;
+                            display: inline-block;
                         }
                         h2 {
-                            font-size: 2.2rem;
+                            font-size: clamp(1.8rem, 6vw, 2.2rem);
                             margin-bottom: 1rem;
                         }
                         .soon-message {
-                            font-size: 1.4rem;
+                            font-size: clamp(1.1rem, 4vw, 1.4rem);
                             color: #ffd966;
                             background: #1f4172;
-                            padding: 1rem 2rem;
+                            padding: 1rem 1.5rem;
                             border-radius: 4rem;
                             margin: 1.5rem 0;
                             font-weight: 600;
+                            word-break: break-word;
                         }
                     </style>
                 </head>
@@ -645,6 +697,16 @@
                 window.open(blobUrl, '_blank');
                 setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
                 mainMessage.innerHTML = '<i class="fas fa-hourglass"></i> Image coming soon — new tab opened';
+            });
+
+            // keyboard accessibility
+            [urlOption, imageOption].forEach(opt => {
+                opt.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        opt.click();
+                    }
+                });
             });
 
         })();
