@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>MyQR · generate below input</title>
+    <title>MyQR · download fixed</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -235,11 +235,11 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>generate button below input</span>
+                    <span>download fixed</span>
                 </div>
             </div>
             <div class="pill-note">
-                <i class="fas-regular fa-message"></i> + custom message
+                <i class="fas-regular fa-star"></i> RATE US
             </div>
         </div>
 
@@ -260,7 +260,7 @@
         </div>
 
         <div class="message-area" id="mainMessage">
-            <i class="fas fa-arrow-up"></i> click an option above
+            <i class="fas fa-arrow-up"></i> click URL to generate QR
         </div>
 
         <div class="footer-note">
@@ -278,16 +278,16 @@
             // Custom message exactly as requested
             const whatsappMessage = 'To convert URL to QR then checkout this website " https://sarvasankti0.github.io/MyQR/ "';
 
-            // ---------- URL: open fresh tab with input & generate (button below input) ----------
+            // ---------- URL: open fresh tab with working download ----------
             urlOption.addEventListener('click', () => {
-                // Fresh tab page for URL input, QR generation, and a back button
+                // Fresh tab page for URL input and QR generation (download fixed)
                 const urlPage = `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-                    <title>MyQR · generate from url</title>
+                    <title>MyQR · url to qr</title>
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
@@ -340,13 +340,14 @@
                             margin-bottom: 1.5rem;
                             flex-wrap: wrap;
                         }
-                        /* input box */
+                        
+                        /* Input box */
                         .input-field {
                             background: #0e1d33;
                             border: 1px solid #3a6190;
                             border-radius: 3rem;
                             padding: 0.8rem 1.5rem;
-                            margin: 1.5rem 0 1rem 0;
+                            margin: 1.5rem 0;
                             display: flex;
                             align-items: center;
                             gap: 0.8rem;
@@ -367,37 +368,34 @@
                         .input-field input::placeholder {
                             color: #7f9fc9;
                         }
-                        /* generate button - below input with space */
+
+                        /* Generate button */
                         .generate-btn-container {
-                            margin: 1.5rem 0 2rem 0;
+                            margin: 2rem 0 1.5rem 0;
+                            text-align: center;
                         }
                         .generate-btn {
                             background: #2a4d82;
                             border: none;
                             color: white;
-                            padding: 1rem 2rem;
+                            padding: 1rem 2.5rem;
                             border-radius: 3rem;
                             font-weight: 600;
-                            font-size: 1.1rem;
+                            font-size: 1.2rem;
                             cursor: pointer;
                             border: 1px solid #ffffff60;
-                            width: 100%;
-                            max-width: 300px;
-                            margin: 0 auto;
                             display: inline-flex;
                             align-items: center;
-                            justify-content: center;
                             gap: 0.8rem;
-                            touch-action: manipulation;
                         }
                         canvas {
                             background: white;
                             border-radius: 2rem;
                             padding: 0.5rem;
-                            width: min(220px, 70vw);
-                            height: min(220px, 70vw);
-                            margin: 1rem auto;
+                            width: 250px;
+                            height: 250px;
                             display: block;
+                            margin: 1rem auto;
                         }
                         .action-buttons {
                             display: flex;
@@ -408,7 +406,7 @@
                         }
                         .btn {
                             background: #1f3b60;
-                            padding: 0.8rem 1.4rem;
+                            padding: 0.8rem 1.5rem;
                             border-radius: 3rem;
                             color: white;
                             border: 1px solid #ffffff40;
@@ -416,8 +414,6 @@
                             display: inline-flex;
                             align-items: center;
                             gap: 0.5rem;
-                            font-size: clamp(0.85rem, 2.5vw, 0.95rem);
-                            touch-action: manipulation;
                         }
                         .btn-share {
                             background: #25D366;
@@ -427,16 +423,21 @@
                         .footer-msg {
                             margin-top: 1rem;
                             color: #b3d1ff;
-                            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
-                            min-height: 2rem;
                         }
-                        @media (max-width: 480px) {
-                            .generate-btn {
-                                width: 100%;
-                            }
-                            .btn {
-                                flex: 1 1 auto;
-                            }
+                        .download-btn {
+                            background: #2a4d82;
+                            border: none;
+                            color: white;
+                            padding: 1rem 2.5rem;
+                            border-radius: 3rem;
+                            font-weight: 600;
+                            font-size: 1.2rem;
+                            cursor: pointer;
+                            border: 1px solid #ffffff60;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.8rem;
+                            margin: 1rem 0;
                         }
                     </style>
                 </head>
@@ -452,24 +453,28 @@
                         <!-- Input box -->
                         <div class="input-field">
                             <i class="fas fa-globe"></i>
-                            <input type="text" id="urlInput" placeholder="https:// example.com" value="https://myqr.site" inputmode="url">
+                            <input type="text" id="urlInput" placeholder="https:// example.com" value="https://example.com" inputmode="url">
                         </div>
 
-                        <!-- Generate button below with space -->
+                        <!-- Generate button -->
                         <div class="generate-btn-container">
                             <button class="generate-btn" id="generateBtn"><i class="fas fa-qrcode"></i> generate QR</button>
                         </div>
 
                         <!-- QR appears after generate -->
-                        <canvas id="qrCanvas" width="200" height="200" style="display: none;"></canvas>
+                        <canvas id="qrCanvas" width="250" height="250" style="display: none;"></canvas>
+
+                        <!-- DOWNLOAD button (shown after generate) -->
+                        <div id="downloadContainer" style="display: none;">
+                            <button class="download-btn" id="downloadBtn"><i class="fas fa-download"></i> DOWNLOAD</button>
+                        </div>
 
                         <div class="action-buttons" id="actionButtons" style="display: none;">
-                            <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> PNG</button>
                             <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> copy QR</button>
                             <button class="btn btn-share" id="shareBtn"><i class="fab fa-whatsapp"></i> share QR</button>
                         </div>
 
-                        <div class="footer-msg" id="message">enter url and click generate button</div>
+                        <div class="footer-msg" id="message">enter url and click generate</div>
                     </div>
 
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -479,6 +484,7 @@
                             const generateBtn = document.getElementById('generateBtn');
                             const canvas = document.getElementById('qrCanvas');
                             const actionButtons = document.getElementById('actionButtons');
+                            const downloadContainer = document.getElementById('downloadContainer');
                             const downloadBtn = document.getElementById('downloadBtn');
                             const copyBtn = document.getElementById('copyBtn');
                             const shareBtn = document.getElementById('shareBtn');
@@ -507,8 +513,8 @@
                                     const tempDiv = document.createElement('div');
                                     new QRCode(tempDiv, {
                                         text: url,
-                                        width: 200,
-                                        height: 200,
+                                        width: 250,
+                                        height: 250,
                                         colorDark: "#0d2642",
                                         colorLight: "#ffffff",
                                         correctLevel: QRCode.CorrectLevel.M
@@ -518,9 +524,11 @@
                                         const qrCanvasElem = tempDiv.querySelector('canvas');
                                         if (qrCanvasElem) {
                                             const ctx = canvas.getContext('2d');
-                                            ctx.clearRect(0,0,200,200);
-                                            ctx.drawImage(qrCanvasElem, 0, 0, 200, 200);
+                                            ctx.clearRect(0,0,250,250);
+                                            ctx.drawImage(qrCanvasElem, 0, 0, 250, 250);
+                                            
                                             canvas.style.display = 'block';
+                                            downloadContainer.style.display = 'block';
                                             actionButtons.style.display = 'flex';
                                             showMsg('qr generated', false);
                                         } else {
@@ -533,13 +541,24 @@
                             });
 
                             downloadBtn.addEventListener('click', () => {
+                                // Ensure canvas has content
+                                if (canvas.style.display === 'none') {
+                                    showMsg('generate qr first', true);
+                                    return;
+                                }
+                                // Force a redraw to make sure the QR is there
                                 const a = document.createElement('a');
-                                a.download = 'myqr-'+Date.now()+'.png';
+                                a.download = 'myqr-' + Date.now() + '.png';
                                 a.href = canvas.toDataURL('image/png');
                                 a.click();
+                                showMsg('download started', false);
                             });
 
                             copyBtn.addEventListener('click', async () => {
+                                if (canvas.style.display === 'none') {
+                                    showMsg('generate qr first', true);
+                                    return;
+                                }
                                 try {
                                     const blob = await new Promise(res => canvas.toBlob(res));
                                     await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
@@ -551,8 +570,12 @@
                                 }
                             });
 
-                            // WhatsApp share: send QR image with custom message
+                            // WhatsApp share
                             shareBtn.addEventListener('click', async () => {
+                                if (canvas.style.display === 'none') {
+                                    showMsg('generate qr first', true);
+                                    return;
+                                }
                                 try {
                                     if (navigator.canShare && navigator.canShare({ files: [new File([], 'qr.png')] })) {
                                         const blob = await new Promise(res => canvas.toBlob(res));
@@ -565,16 +588,13 @@
                                         await navigator.share(shareData);
                                         showMsg('shared via system', false);
                                     } else {
-                                        // Fallback: open WhatsApp with message + download image
                                         const encodedText = encodeURIComponent(customMessage + '\\n\\n(Send the QR image from downloads)');
                                         window.open('https://wa.me/?text=' + encodedText, '_blank');
-                                        
                                         const a = document.createElement('a');
                                         a.download = 'myqr-'+Date.now()+'.png';
                                         a.href = canvas.toDataURL('image/png');
                                         a.click();
-                                        
-                                        showMsg('image downloaded - now send it on WhatsApp', false);
+                                        showMsg('image downloaded - send on WhatsApp', false);
                                     }
                                 } catch (err) {
                                     console.warn(err);
@@ -584,7 +604,7 @@
                                     a.download = 'myqr-'+Date.now()+'.png';
                                     a.href = canvas.toDataURL('image/png');
                                     a.click();
-                                    showMsg('image downloaded - send it on WhatsApp', false);
+                                    showMsg('image downloaded - send on WhatsApp', false);
                                 }
                             });
                         })();
@@ -597,7 +617,7 @@
                 const blobUrl = URL.createObjectURL(blob);
                 window.open(blobUrl, '_blank');
                 setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
-                mainMessage.innerHTML = '<i class="fas fa-check"></i> URL tab opened';
+                mainMessage.innerHTML = '<i class="fas fa-check"></i> URL tab opened (download fixed)';
             });
 
             // ---------- IMAGE: coming soon with back option ----------
