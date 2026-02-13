@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQR · url to qr (simple)</title>
+    <title>MyQR · url or image (soon)</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -74,9 +74,10 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 3.5rem;
             width: 100%;
-            max-width: 750px;
+            max-width: 800px;
             padding: 2.8rem 2.5rem;
             box-shadow: 0 50px 80px -20px #030613, inset 0 0 0 1px rgba(255,255,255,0.04);
+            text-align: center;
         }
 
         .header {
@@ -135,160 +136,76 @@
             color: #d6e8ff;
         }
 
-        /* main input area */
-        .input-section {
-            margin: 2.5rem 0 2rem;
-        }
-
-        .url-input-group {
-            background: #0e1d33;
-            border: 1px solid #3a6190;
-            border-radius: 4rem;
-            padding: 0.3rem 0.3rem 0.3rem 2rem;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .url-input-group i {
-            color: #8bb2f0;
-            font-size: 1.2rem;
-        }
-
-        .url-input-group input {
-            flex: 1 1 200px;
-            background: transparent;
-            border: none;
-            padding: 1rem 0.5rem;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .url-input-group input::placeholder {
-            color: #7f9fc9;
-        }
-
-        .url-input-group button {
-            background: #2a4d82;
-            border: none;
-            color: white;
-            padding: 0.9rem 2.2rem;
-            border-radius: 4rem;
-            font-weight: 600;
-            font-size: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            cursor: pointer;
-            transition: 0.15s;
-            border: 1px solid #ffffff60;
-            white-space: nowrap;
-        }
-
-        .url-input-group button:hover {
-            background: #3663a3;
-            transform: scale(1.02);
-        }
-
-        /* qr preview */
-        .qr-preview-area {
-            background: #10243f80;
-            border-radius: 3rem;
-            padding: 2rem;
-            border: 1px solid #2d5280;
-            text-align: center;
-            margin: 1.8rem 0;
-        }
-
-        .qr-container {
-            background: white;
-            border-radius: 2.5rem;
-            padding: 1.5rem;
-            display: inline-block;
-            box-shadow: 0 20px 30px -10px #030a14;
-            margin-bottom: 1rem;
-        }
-
-        canvas {
-            display: block;
-            width: 220px;
-            height: 220px;
-            border-radius: 1.5rem;
-        }
-
-        .url-preview {
-            background: #0a1b30;
-            border-radius: 3rem;
-            padding: 0.8rem 1.5rem;
-            word-break: break-all;
-            border: 1px solid #325684;
-            margin: 1rem 0 1.5rem;
-            color: #bfdaff;
-            font-size: 0.95rem;
-        }
-
-        .action-buttons {
+        /* two option cards */
+        .options-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 2rem;
             justify-content: center;
-            margin-top: 1.2rem;
+            margin: 2.8rem 0 2rem;
         }
 
-        .btn {
-            background: #1f3b60;
-            border: none;
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 3rem;
-            font-weight: 500;
-            display: inline-flex;
+        .option-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 2.8rem;
+            padding: 2rem 1.8rem;
+            width: 240px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.6rem;
+            gap: 1rem;
             cursor: pointer;
-            border: 1px solid #ffffff40;
-            transition: 0.1s;
-            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 20px 30px -15px #030613;
         }
 
-        .btn-wa {
-            background: #25D366;
-            color: #111;
+        .option-card:hover {
+            transform: translateY(-6px);
+            background: #1d3455cc;
+            border-color: #7196d0;
+        }
+
+        .option-card i {
+            font-size: 3rem;
+            color: #cde0ff;
+            background: #0e2545b0;
+            padding: 1.2rem;
+            border-radius: 2.8rem;
+            width: 6rem;
+            height: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option-card h3 {
+            font-size: 1.8rem;
             font-weight: 600;
+            color: white;
         }
 
-        .btn-wa i {
-            color: #075e54;
-        }
-
-        .btn:hover {
-            background: #2b4e7a;
-        }
-
-        .btn-wa:hover {
-            background: #30e27b;
+        .option-card p {
+            color: #b5d0ff;
+            font-size: 1rem;
         }
 
         .footer-note {
-            margin-top: 2rem;
-            font-size: 0.8rem;
+            margin-top: 2.5rem;
+            font-size: 0.9rem;
             color: #99b6e3;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.7rem;
             border-top: 1px solid #263f62;
-            padding-top: 1.5rem;
+            padding-top: 1.8rem;
         }
 
         .message-area {
-            min-height: 2.2rem;
-            font-size: 0.9rem;
+            min-height: 2rem;
             color: #b3d1ff;
-            margin: 0.5rem 0;
         }
     </style>
 </head>
@@ -301,142 +218,351 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>url → qr · instant</span>
+                    <span>url now · image soon</span>
                 </div>
             </div>
             <div class="pill-note">
-                <i class="fas-regular fa-link"></i> just paste & generate
+                <i class="fas-regular fa-pen-ruler"></i> two simple options
             </div>
         </div>
 
-        <!-- only URL input -->
-        <div class="input-section">
-            <div class="url-input-group">
-                <i class="fas fa-globe"></i>
-                <input type="url" id="urlInput" placeholder="https:// example.com / your-link" value="https://myqr.site">
-                <button id="generateBtn"><i class="fas fa-qrcode"></i> generate</button>
+        <!-- two option cards: URL and IMAGE -->
+        <div class="options-row">
+            <!-- URL Card -->
+            <div class="option-card" id="urlOption">
+                <i class="fas fa-link"></i>
+                <h3>URL</h3>
+                <p>Convert link to QR</p>
+            </div>
+            <!-- Image Card (coming soon) -->
+            <div class="option-card" id="imageOption">
+                <i class="fas fa-image"></i>
+                <h3>Image</h3>
+                <p>QR from image · soon</p>
             </div>
         </div>
 
-        <!-- QR preview card -->
-        <div class="qr-preview-area">
-            <div class="qr-container">
-                <canvas id="qrCanvas" width="220" height="220"></canvas>
-            </div>
-
-            <div class="url-preview" id="urlPreview">https://myqr.site</div>
-
-            <div class="action-buttons">
-                <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> PNG</button>
-                <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> copy QR</button>
-                <a href="#" id="whatsappShareBtn" class="btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> share link</a>
-            </div>
-
-            <div class="message-area" id="message">
-                <i class="fas fa-circle-info"></i> enter url and generate
-            </div>
+        <div class="message-area" id="mainMessage">
+            <i class="fas fa-arrow-up"></i> click an option above
         </div>
 
         <div class="footer-note">
             <i class="fas-regular fa-circle-check"></i>
-            <span>MyQR · just url to qr, nothing else</span>
+            <span>MyQR · url works now · image coming soon</span>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         (function() {
-            const urlInput = document.getElementById('urlInput');
-            const generateBtn = document.getElementById('generateBtn');
-            const qrCanvas = document.getElementById('qrCanvas');
-            const urlPreview = document.getElementById('urlPreview');
-            const downloadBtn = document.getElementById('downloadBtn');
-            const copyBtn = document.getElementById('copyBtn');
-            const whatsappBtn = document.getElementById('whatsappShareBtn');
-            const messageDiv = document.getElementById('message');
+            const urlOption = document.getElementById('urlOption');
+            const imageOption = document.getElementById('imageOption');
+            const mainMessage = document.getElementById('mainMessage');
 
-            let currentUrl = 'https://myqr.site';
-
-            function showMessage(msg, isError = false) {
-                messageDiv.innerHTML = `<i class="fas ${isError ? 'fa-circle-exclamation' : 'fa-circle-info'}"></i> ${msg}`;
-                messageDiv.style.color = isError ? '#faa' : '#b3d1ff';
-            }
-
-            function generateQR() {
-                let url = urlInput.value.trim();
-                if (url === '') {
-                    showMessage('enter a url', true);
-                    return;
-                }
-
-                // if no protocol, prepend https://
-                if (!url.match(/^[a-zA-Z]+:\/\//)) {
-                    url = 'https://' + url;
-                }
-
-                currentUrl = url;
-                urlPreview.innerText = url.length > 50 ? url.slice(0,47)+'…' : url;
-
-                try {
-                    const tempDiv = document.createElement('div');
-                    new QRCode(tempDiv, {
-                        text: url,
-                        width: 220,
-                        height: 220,
-                        colorDark: "#0d2642",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.M
-                    });
-
-                    setTimeout(() => {
-                        const canvasElem = tempDiv.querySelector('canvas');
-                        if (canvasElem) {
-                            const ctx = qrCanvas.getContext('2d');
-                            ctx.clearRect(0, 0, 220, 220);
-                            ctx.drawImage(canvasElem, 0, 0, 220, 220);
-                            showMessage('qr updated ✓', false);
-                        } else {
-                            showMessage('canvas error, retry', true);
+            // ---------- URL: open new tab with simple input & generator ----------
+            urlOption.addEventListener('click', () => {
+                // Create a new tab with a minimal URL-to-QR page
+                const urlPage = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>MyQR · generate from url</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <style>
+                        * { margin:0; padding:0; box-sizing:border-box; }
+                        body {
+                            background: #0f1c30;
+                            font-family: 'Inter', sans-serif;
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 1.5rem;
+                            color: #edf3ff;
                         }
-                    }, 30);
-                } catch (e) {
-                    showMessage('invalid input', true);
-                }
-            }
+                        .glass-panel {
+                            background: #1c314ce0;
+                            backdrop-filter: blur(16px);
+                            border: 1px solid #4a6f9f;
+                            border-radius: 3rem;
+                            max-width: 650px;
+                            width: 100%;
+                            padding: 2.5rem 2rem;
+                            box-shadow: 0 40px 70px -15px #020916;
+                            text-align: center;
+                        }
+                        h2 {
+                            display: flex;
+                            align-items: center;
+                            gap: 0.8rem;
+                            justify-content: center;
+                            margin-bottom: 2rem;
+                        }
+                        .input-group {
+                            background: #0e1d33;
+                            border: 1px solid #3a6190;
+                            border-radius: 4rem;
+                            padding: 0.2rem 0.2rem 0.2rem 1.8rem;
+                            display: flex;
+                            align-items: center;
+                            flex-wrap: wrap;
+                            margin: 2rem 0;
+                        }
+                        .input-group i {
+                            color: #8bb2f0;
+                        }
+                        .input-group input {
+                            flex: 1 1 200px;
+                            background: transparent;
+                            border: none;
+                            padding: 1rem 0.5rem;
+                            color: white;
+                            font-size: 1rem;
+                            outline: none;
+                        }
+                        .input-group button {
+                            background: #2a4d82;
+                            border: none;
+                            color: white;
+                            padding: 0.8rem 2rem;
+                            border-radius: 4rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            border: 1px solid #ffffff60;
+                            white-space: nowrap;
+                        }
+                        canvas {
+                            background: white;
+                            border-radius: 2rem;
+                            padding: 0.8rem;
+                            width: 200px;
+                            height: 200px;
+                            margin: 1rem auto;
+                            display: block;
+                        }
+                        .action-buttons {
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 0.8rem;
+                            justify-content: center;
+                            margin-top: 1.5rem;
+                        }
+                        .btn {
+                            background: #1f3b60;
+                            padding: 0.7rem 1.5rem;
+                            border-radius: 3rem;
+                            color: white;
+                            border: 1px solid #ffffff40;
+                            cursor: pointer;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 0.5rem;
+                        }
+                        .btn-wa {
+                            background: #25D366;
+                            color: #111;
+                        }
+                        .footer-msg {
+                            margin-top: 1rem;
+                            color: #b3d1ff;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="glass-panel">
+                        <h2><i class="fas fa-link"></i> URL to QR</h2>
+                        <div class="input-group">
+                            <i class="fas fa-globe"></i>
+                            <input type="text" id="urlInput" placeholder="https:// example.com" value="https://myqr.site">
+                            <button id="generateBtn"><i class="fas fa-qrcode"></i> generate</button>
+                        </div>
 
-            // initial generate
-            generateQR();
+                        <canvas id="qrCanvas" width="200" height="200"></canvas>
 
-            generateBtn.addEventListener('click', generateQR);
+                        <div class="action-buttons">
+                            <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> PNG</button>
+                            <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> copy QR</button>
+                            <a href="#" id="whatsappBtn" class="btn btn-wa" target="_blank"><i class="fab fa-whatsapp"></i> share link</a>
+                        </div>
 
-            urlInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') generateQR();
+                        <div class="footer-msg" id="message">enter url and generate</div>
+                    </div>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
+                    <script>
+                        (function() {
+                            const urlInput = document.getElementById('urlInput');
+                            const generateBtn = document.getElementById('generateBtn');
+                            const canvas = document.getElementById('qrCanvas');
+                            const downloadBtn = document.getElementById('downloadBtn');
+                            const copyBtn = document.getElementById('copyBtn');
+                            const whatsappBtn = document.getElementById('whatsappBtn');
+                            const msg = document.getElementById('message');
+
+                            let currentUrl = 'https://myqr.site';
+
+                            function showMsg(text, err) {
+                                msg.innerText = text;
+                                msg.style.color = err ? '#faa' : '#b3d1ff';
+                            }
+
+                            function generateQR() {
+                                let url = urlInput.value.trim();
+                                if (!url) {
+                                    showMsg('enter url', true);
+                                    return;
+                                }
+                                if (!url.match(/^[a-zA-Z]+:\\/\\//)) {
+                                    url = 'https://' + url;
+                                }
+                                currentUrl = url;
+                                try {
+                                    const tempDiv = document.createElement('div');
+                                    new QRCode(tempDiv, {
+                                        text: url,
+                                        width: 200,
+                                        height: 200,
+                                        colorDark: "#0d2642",
+                                        colorLight: "#ffffff",
+                                        correctLevel: QRCode.CorrectLevel.M
+                                    });
+                                    setTimeout(() => {
+                                        const qrCanvas = tempDiv.querySelector('canvas');
+                                        if (qrCanvas) {
+                                            const ctx = canvas.getContext('2d');
+                                            ctx.clearRect(0,0,200,200);
+                                            ctx.drawImage(qrCanvas, 0, 0, 200, 200);
+                                            showMsg('qr ready', false);
+                                        }
+                                    }, 30);
+                                } catch (e) {
+                                    showMsg('error', true);
+                                }
+                            }
+
+                            generateQR();
+
+                            generateBtn.addEventListener('click', generateQR);
+                            urlInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') generateQR(); });
+
+                            downloadBtn.addEventListener('click', () => {
+                                const a = document.createElement('a');
+                                a.download = 'myqr-'+Date.now()+'.png';
+                                a.href = canvas.toDataURL('image/png');
+                                a.click();
+                            });
+
+                            copyBtn.addEventListener('click', async () => {
+                                try {
+                                    const blob = await new Promise(res => canvas.toBlob(res));
+                                    await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
+                                    showMsg('qr copied', false);
+                                } catch {
+                                    navigator.clipboard.writeText(currentUrl).then(() => showMsg('url copied', false));
+                                }
+                            });
+
+                            whatsappBtn.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                const text = encodeURIComponent('Check out this link from MyQR: ' + currentUrl);
+                                window.open('https://wa.me/?text=' + text, '_blank');
+                            });
+                        })();
+                    <\/script>
+                </body>
+                </html>
+                `;
+
+                const blob = new Blob([urlPage], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                mainMessage.innerHTML = '<i class="fas fa-check"></i> URL tab opened';
             });
 
-            downloadBtn.addEventListener('click', () => {
-                const canvas = qrCanvas;
-                const a = document.createElement('a');
-                a.download = `myqr-${Date.now()}.png`;
-                a.href = canvas.toDataURL('image/png');
-                a.click();
-                showMessage('downloaded png');
-            });
+            // ---------- IMAGE: coming soon ----------
+            imageOption.addEventListener('click', () => {
+                // Open a new tab with "coming soon" message
+                const soonPage = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>MyQR · image feature</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+                    <style>
+                        * { margin:0; padding:0; box-sizing:border-box; }
+                        body {
+                            background: #0f1c30;
+                            font-family: 'Inter', sans-serif;
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 1.5rem;
+                            color: #edf3ff;
+                        }
+                        .glass-panel {
+                            background: #1c314ce0;
+                            backdrop-filter: blur(16px);
+                            border: 1px solid #4a6f9f;
+                            border-radius: 3.5rem;
+                            max-width: 500px;
+                            width: 100%;
+                            padding: 3rem 2rem;
+                            box-shadow: 0 40px 70px -15px #020916;
+                            text-align: center;
+                        }
+                        i.big-icon {
+                            font-size: 5rem;
+                            color: #cde0ff;
+                            background: #0e2545b0;
+                            padding: 1.5rem;
+                            border-radius: 4rem;
+                            margin-bottom: 1.5rem;
+                        }
+                        h2 {
+                            font-size: 2.2rem;
+                            margin-bottom: 1rem;
+                        }
+                        p {
+                            font-size: 1.2rem;
+                            color: #b5d0ff;
+                            margin-bottom: 2rem;
+                        }
+                        .soon-badge {
+                            background: #2a4d82;
+                            padding: 0.8rem 2rem;
+                            border-radius: 3rem;
+                            display: inline-block;
+                            font-weight: 600;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="glass-panel">
+                        <i class="fas fa-image big-icon"></i>
+                        <h2>Image to QR</h2>
+                        <p>Sorry, this feature is coming soon.</p>
+                        <div class="soon-badge"><i class="fas fa-clock"></i> under development</div>
+                    </div>
+                </body>
+                </html>
+                `;
 
-            copyBtn.addEventListener('click', async () => {
-                try {
-                    const blob = await new Promise(res => qrCanvas.toBlob(res));
-                    await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
-                    showMessage('qr image copied');
-                } catch (e) {
-                    navigator.clipboard.writeText(currentUrl).then(() => showMessage('url copied (image copy failed)'));
-                }
-            });
-
-            // whatsapp share (the link, not the image)
-            whatsappBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                const text = encodeURIComponent('Check out this link from MyQR: ' + currentUrl);
-                window.open('https://wa.me/?text=' + text, '_blank');
+                const blob = new Blob([soonPage], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                window.open(blobUrl, '_blank');
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+                mainMessage.innerHTML = '<i class="fas fa-hourglass"></i> Image coming soon — new tab opened';
             });
 
         })();
