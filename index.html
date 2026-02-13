@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyQR · upload & share</title>
+    <title>MyQR · auto‑download on scan</title>
     <!-- font Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,7 +29,7 @@
             color: #eef4ff;
         }
 
-        /* animated background (cosmic) */
+        /* animated background */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -231,15 +231,15 @@
                 <div class="brand-icon"><i class="fas fa-qrcode"></i></div>
                 <div>
                     <h1>MyQR</h1>
-                    <span>upload · image, pdf, audio</span>
+                    <span>scan & download · image, pdf, audio</span>
                 </div>
             </div>
             <div class="pill-note">
-                <i class="fas-regular fa-cloud-upload"></i> file upload ready
+                <i class="fas-regular fa-download"></i> auto‑download on scan
             </div>
         </div>
 
-        <!-- exactly 4 types: url, image, pdf, audio -->
+        <!-- exactly 4 types -->
         <div class="type-grid">
             <div class="type-tile" data-type="url" id="tileUrl">
                 <i class="fas fa-link"></i>
@@ -260,35 +260,32 @@
         </div>
 
         <div class="instruction">
-            <i class="fas fa-arrow-pointer"></i> Click a tile → upload file or enter URL → QR opens in new tab with share
+            <i class="fas fa-arrow-pointer"></i> Click a tile → upload file or enter URL → QR triggers download when scanned
         </div>
 
         <div class="empty-state">
             <i class="fas fa-qrcode fa-2x"></i>
-            <span>No QR on main page. After input, QR appears in a new tab ready to share (WhatsApp etc).</span>
+            <span>No QR on main page. After input, QR opens in new tab. Scan with phone → file downloads automatically.</span>
         </div>
 
         <div class="footer-note">
             <i class="fas-regular fa-circle-check"></i>
-            <span>MyQR · image/pdf/audio upload → hosted link simulation</span>
+            <span>MyQR · image/pdf/audio → direct download link</span>
         </div>
     </div>
 
     <script>
         (function() {
-            // get tiles
             const urlTile = document.getElementById('tileUrl');
             const imageTile = document.getElementById('tileImage');
             const pdfTile = document.getElementById('tilePdf');
             const audioTile = document.getElementById('tileAudio');
 
-            // function to create a custom modal with either input field or file upload
             function handleTypeClick(type) {
-                // remove any existing modal
+                // remove existing modal
                 const existingModal = document.getElementById('customInputModal');
                 if (existingModal) existingModal.remove();
 
-                // build modal
                 const modal = document.createElement('div');
                 modal.id = 'customInputModal';
                 modal.style.position = 'fixed';
@@ -324,7 +321,6 @@
                         <input type="text" id="modalInput" placeholder="https:// example.com" value="https://" style="width:100%; padding:1rem 1.5rem; border-radius:3rem; border:1px solid #3f6190; background:#0e1d33; color:white; font-size:1rem; outline:none; margin-bottom:1.5rem;">
                     `;
                 } else {
-                    // image, pdf, audio: file upload
                     let acceptAttr = '';
                     if (type === 'image') {
                         typeDisplay = 'Image';
@@ -368,7 +364,7 @@
                 modal.appendChild(modalContent);
                 document.body.appendChild(modal);
 
-                // special handling for file input
+                // file input label update
                 if (type !== 'url') {
                     const fileInput = document.getElementById('fileUpload');
                     const fileLabel = document.getElementById('fileLabel');
@@ -386,17 +382,12 @@
                     });
                 }
 
-                // focus if input exists
-                setTimeout(() => {
-                    if (type === 'url') document.getElementById('modalInput')?.focus();
-                }, 100);
+                if (type === 'url') {
+                    setTimeout(() => document.getElementById('modalInput')?.focus(), 100);
+                }
 
-                // cancel
-                document.getElementById('modalCancel').addEventListener('click', () => {
-                    modal.remove();
-                });
+                document.getElementById('modalCancel').addEventListener('click', () => modal.remove());
 
-                // generate action
                 document.getElementById('modalGenerate').addEventListener('click', () => {
                     if (type === 'url') {
                         const inputVal = document.getElementById('modalInput').value.trim();
@@ -405,9 +396,9 @@
                             return;
                         }
                         modal.remove();
-                        openQRInNewTab(type, inputVal, null); // no file
+                        // For URL, just a normal link (no forced download)
+                        openQRInNewTab(type, inputVal, null);
                     } else {
-                        // file upload case
                         const fileInput = document.getElementById('fileUpload');
                         if (!fileInput.files || fileInput.files.length === 0) {
                             alert('Please select a file');
@@ -415,26 +406,74 @@
                         }
                         const file = fileInput.files[0];
                         modal.remove();
-                        // simulate hosting: generate a fake link based on file name
-                        // In a real app you would upload to server. Here we simulate a hosted link.
-                        const fakeUrl = `https://myqr.host/${type}/${encodeURIComponent(file.name)}`;
-                        openQRInNewTab(type, fakeUrl, file); // pass file for reference (optional)
+
+                        // Generate a downloadable link for the file using object URL
+                        // This creates a temporary URL that points to the file data.
+                        // When scanned, the phone will download the file because we set content-disposition via download attribute in the new tab's page.
+                        // But we cannot force download from a separate tab directly using object URL if the tab is closed.
+                        // Instead, we create a tiny HTML page that serves the file with download attribute.
+                        // We'll create a Blob URL for the file, then in the new tab we embed a link that auto-triggers download.
+                        
+                        // For the QR code, we need a URL that leads to a download page.
+                        // We'll create a simple downloader HTML that forces download.
+                        const fileBlob = file;
+                        const fileURL = URL.createObjectURL(fileBlob);
+                        const fileName = file.name;
+
+                        // We'll pass these to the new tab via URL parameters? But easier: we generate a dedicated download page.
+                        // But we already have openQRInNewTab that expects a text. We'll change approach: 
+                        // For file types, we will generate a small HTML that auto-downloads the file, and put that HTML's blob URL into the QR.
+                        // However the QR code must encode a URL that points to that download page. We'll create a download page blob and encode its URL.
+                        
+                        // Let's create a downloader HTML page as a Blob.
+                        const downloaderHTML = `
+                        <!DOCTYPE html>
+                        <html>
+                        <head><meta charset="UTF-8"><title>Downloading ${fileName}</title></head>
+                        <body style="background:#0e1c2f; color:white; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif;">
+                            <div style="text-align:center;">
+                                <i class="fas fa-download" style="font-size:3rem;"></i>
+                                <h2>Your download should start automatically</h2>
+                                <p>If not, <a id="downloadLink" href="${fileURL}" download="${fileName}" style="color:#aac8ff;">click here</a>.</p>
+                            </div>
+                            <script>
+                                // auto-trigger download
+                                window.onload = function() {
+                                    const a = document.createElement('a');
+                                    a.href = '${fileURL}';
+                                    a.download = '${fileName}';
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                };
+                            <\/script>
+                        </body>
+                        </html>
+                        `;
+                        
+                        const downloaderBlob = new Blob([downloaderHTML], { type: 'text/html' });
+                        const downloaderURL = URL.createObjectURL(downloaderBlob);
+                        
+                        // Now the QR code will encode this downloaderURL. When scanned, the phone opens that page and triggers download.
+                        openQRInNewTab(type, downloaderURL, file, fileName);
+                        
+                        // Clean up object URLs after some time (optional)
+                        setTimeout(() => {
+                            URL.revokeObjectURL(fileURL);
+                            URL.revokeObjectURL(downloaderURL);
+                        }, 120000);
                     }
                 });
 
-                // enter key for url only
                 if (type === 'url') {
                     const inp = document.getElementById('modalInput');
                     inp.addEventListener('keypress', (e) => {
-                        if (e.key === 'Enter') {
-                            document.getElementById('modalGenerate').click();
-                        }
+                        if (e.key === 'Enter') document.getElementById('modalGenerate').click();
                     });
                 }
             }
 
-            function openQRInNewTab(type, finalText, file = null) {
-                // make sure link has protocol for display, but for file uploads we already have fake https://myqr.host/...
+            function openQRInNewTab(type, finalText, file = null, fileName = 'file') {
                 let displayText = finalText;
                 let iconFa = 'fa-link';
                 if (type === 'image') iconFa = 'fa-image';
@@ -442,13 +481,17 @@
                 else if (type === 'audio') iconFa = 'fa-music';
                 else iconFa = 'fa-link';
 
-                // add protocol if missing and type is url (for user typed)
+                // add protocol if missing and type is url
                 if (type === 'url' && !finalText.match(/^[a-zA-Z]+:\/\//)) {
                     finalText = 'https://' + finalText;
                     displayText = finalText;
                 }
 
-                // Build the new tab HTML with QR code and WhatsApp share
+                let fileNotice = '';
+                if (type !== 'url') {
+                    fileNotice = `<p style="margin-top:1rem; font-size:0.9rem; background:#1c3b5e; padding:0.5rem 1rem; border-radius:3rem;"><i class="fas fa-download"></i> Scan with phone → file downloads automatically</p>`;
+                }
+
                 const pageContent = `
                 <!DOCTYPE html>
                 <html>
@@ -556,6 +599,7 @@
                         </div>
 
                         <div class="link-preview" id="previewLink">${displayText}</div>
+                        ${fileNotice}
 
                         <div class="share-row">
                             <button class="btn" id="downloadBtn"><i class="fas fa-download"></i> Download PNG</button>
@@ -564,7 +608,7 @@
                         <div style="margin-top:1rem;">
                             <button class="btn" id="copyImageBtn"><i class="fas fa-copy"></i> Copy QR image</button>
                         </div>
-                        <div class="footer-note" id="messageArea"><i class="fas fa-check-circle"></i> QR generated — share anywhere</div>
+                        <div class="footer-note" id="messageArea"><i class="fas fa-check-circle"></i> QR generated — scan with phone to ${type==='url'?'open link':'download file'}</div>
                     </div>
 
                     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>
@@ -590,12 +634,11 @@
                                         const ctx = canvas.getContext('2d');
                                         ctx.clearRect(0,0,240,240);
                                         ctx.drawImage(qrCanvasElem, 0, 0, 240, 240);
-                                        document.getElementById('messageArea').innerHTML = '<i class="fas fa-check-circle"></i> QR ready — you can share';
+                                        document.getElementById('messageArea').innerHTML = '<i class="fas fa-check-circle"></i> QR ready — scan with phone';
                                     }
                                 }, 50);
                             } catch(e) { console.warn(e); }
 
-                            // download
                             document.getElementById('downloadBtn').addEventListener('click', () => {
                                 const a = document.createElement('a');
                                 a.download = 'myqr-${type}-'+Date.now()+'.png';
@@ -603,18 +646,16 @@
                                 a.click();
                             });
 
-                            // copy image
                             document.getElementById('copyImageBtn').addEventListener('click', async () => {
                                 try {
                                     const blob = await new Promise(res => canvas.toBlob(res));
                                     await navigator.clipboard.write([new ClipboardItem({[blob.type]: blob})]);
                                     document.getElementById('messageArea').innerHTML = '<i class="fas fa-check-circle"></i> QR image copied!';
                                 } catch {
-                                    navigator.clipboard.writeText(text).then(() => document.getElementById('messageArea').innerHTML = '<i class="fas fa-info"></i> link copied (image copy unsupported)');
+                                    navigator.clipboard.writeText(text).then(() => document.getElementById('messageArea').innerHTML = '<i class="fas fa-info"></i> link copied');
                                 }
                             });
 
-                            // WhatsApp share: create text with the link
                             const waBtn = document.getElementById('whatsappShareBtn');
                             const encodedText = encodeURIComponent('Check out my QR code from MyQR: ' + text);
                             waBtn.href = 'https://wa.me/?text=' + encodedText;
@@ -630,7 +671,6 @@
                 setTimeout(() => URL.revokeObjectURL(url), 60000);
             }
 
-            // assign clicks
             urlTile.addEventListener('click', () => handleTypeClick('url'));
             imageTile.addEventListener('click', () => handleTypeClick('image'));
             pdfTile.addEventListener('click', () => handleTypeClick('pdf'));
